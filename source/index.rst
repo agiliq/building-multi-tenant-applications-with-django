@@ -11,7 +11,10 @@ Building Multi Tenant Applications with Django
    :caption: Contents:
 
    introduction
-
+   shared-database-shared-schema
+   shared-database-isolated-schema
+   isolated-database
+   isolated-dockers
 
 
 
