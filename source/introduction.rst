@@ -21,3 +21,4 @@ Isolated databased with a shared app server
 
 Completely isolated tenants using Docker
 ------------------------------------------
+
