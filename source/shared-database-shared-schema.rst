@@ -42,11 +42,118 @@ Our base project has one app called :code:`polls`. The models look something lik
 
 There are a number of other files which we will look at later.
 
-Adding multi tenancy
-++++++++++++++++++++++++++++
+Adding multi tenancy to models
++++++++++++++++++++++++++++++++
 
 We will add another app called :code:`tenants`
 
 .. code-block:: bash
 
     python manage.py startapp tenants
+
+
+Create a model for storing :code:`Tenant` data.
+
+.. code-block:: python
+
+    class Tenant(models.Model):
+        name = models.CharField(max_length=100)
+        subdomain_prefix = models.CharField(max_length=100, unique=True)
+
+And then create a class :code:`TenantAwareModel` class which other models with subclass from.
+
+Change the :code:`polls.models` to subclass from :code:`TenantAwareModel`.
+
+
+.. code-block:: python
+
+    # ...
+
+    class Poll(TenantAwareModel):
+        # ...
+
+
+    class Choice(TenantAwareModel):
+        # ...
+
+
+    class Vote(TenantAwareModel):
+        # ...
+
+
+Identifying tenants
++++++++++++++++++++++++++++++++
+
+There are mamny approached to identify the tenants. One common method is to give each tenant their own subdomain. So if you main website is
+
+www.example.com, each of these will be a different tenant.
+
+- thor.example.com
+- loki.example.com
+- potter.example.com
+
+We will use the same method in the rest of the book. Our :code:`Tenant` model has :code:`subdomain_prefix` which will identify the tenant.
+
+We will :code:`polls.local` as the main domain and :code:`<xxx>.polls.local` as tenant subdomain.
+
+
+Extracting tenant from request
++++++++++++++++++++++++++++++++
+
+Django views always have a :code:`request` which has  :code:`Host` header. This will contain the full subdomain the tenant is using.
+We will add some utility methods to do this. Create a :code:`utils.py` and add this code.
+
+.. code-block:: python
+
+    from .models import Tenant
+
+
+    def hostname_from_request(request):
+        # split on `:` to remove port
+        return request.get_host().split(':')[0].lower()
+
+
+    def tenant_from_request(request):
+        hostname = hostname_from_request(request)
+        subdomain_prefix = hostname.split('.')[0]
+        return Tenant.objects.filter(subdomain_prefix=subdomain_prefix).first()
+
+
+Now wherever you have a :code:`request`, you can use :code:`tenant_from_request` to get the tenant.
+
+
+A detour to /etc/hosts
++++++++++++++++++++++++++++++++
+
+To ensure that the :code:`<xxx>.polls.local` hits your development machine, make sure you add a few entries to your :code:`/etc/hosts`
+
+(If you are oj windows, use :code:`C:\Windows\System32\Drivers\etc\hosts`). My file looks like this.
+
+.. code-block:: txt
+
+     # ...
+     127.0.0.1 polls.local
+     127.0.0.1 thor.polls.local
+     127.0.0.1 potter.polls.local
+
+Also update :code:`ALLOWED_HOSTS` your settings.py. Mine looks like this: :code:`ALLOWED_HOSTS = ['polls.local', '.polls.local']`.
+
+
+Using :code:`tenant_from_request` in the views
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Views, whether they are Django function based, class based or a Django Rest Framework view have access to the request.
+Lets take the example of :code:`polls.views.PollViewSet` to limit the endpoints to tenant specic :code:`Poll` objects.
+
+.. code-block:: python
+
+    from tenants.utils import tenant_from_request
+
+
+    class PollViewSet(viewsets.ModelViewSet):
+        queryset = Poll.objects.all()
+        serializer_class = PollSerializer
+
+        def get_queryset(self):
+            tenant = tenant_from_request(self.request)
+            return super().get_queryset().filter(tenant=tenant)
