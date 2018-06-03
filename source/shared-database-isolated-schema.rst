@@ -9,6 +9,17 @@ Limitations of shared schema and our current method
 - Duplication of code
 
 
-What are database schemas
+What are database schemas?
 +++++++++++++++++++++++++++
 
+
+A middleware to set schemas
+++++++++++++++++++++++++++++
+
+
+What about migration?
+++++++++++++++++++++++++++++
+
+
+Beyond the request-response cycle
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
