@@ -129,7 +129,7 @@ To ensure that the :code:`<xxx>.polls.local` hits your development machine, make
 
 (If you are oj windows, use :code:`C:\Windows\System32\Drivers\etc\hosts`). My file looks like this.
 
-.. code-block:: txt
+.. code-block:: text
 
      # ...
      127.0.0.1 polls.local
