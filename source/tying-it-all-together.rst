@@ -2,8 +2,8 @@ Tying it all together
 ------------------------
 
 
-A comparision of various methods
-++++++++++++++++++++++++++++++++++++++++++++
+A comparision of trade-offs of various methods
++++++++++++++++++++++++++++++++++++++++++++++++
 
 =======================     ==========   ==================  ====================================
 Method                      Isolation    Time to             Django DB
@@ -14,3 +14,9 @@ Isolated Schema             Medium       Low                 Medium (DB must sup
 Isolated DB                 High         Medium              High (Supported in all DBs)
 Isolated using docker       Complete     Medium              High (Supported in all DBs)
 =======================     ==========   ==================  ====================================
+
+
+
+What method should I use?
+++++++++++++++++++++++++++++++++++++++++++++
+
