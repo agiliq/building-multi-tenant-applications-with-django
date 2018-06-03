@@ -157,3 +157,33 @@ Lets take the example of :code:`polls.views.PollViewSet` to limit the endpoints 
         def get_queryset(self):
             tenant = tenant_from_request(self.request)
             return super().get_queryset().filter(tenant=tenant)
+
+
+Isolating the admin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Like the views we need to enforce tenant isolation on the admin. We will need to override two methods.
+
+- :code:`get_queryset`: So that only the tenant's objects show up.
+- :code:`save_model`: So that tenant gets set on the object when the object is saved.
+
+With the changes, your :code:`admin.py` looks something like this.
+
+.. code-block:: python
+
+    @admin.register(Poll)
+    class PollAdmin(admin.ModelAdmin):
+        fields = ["question", "created_by", "pub_date"]
+        readonly_fields = ["pub_date"]
+
+        def get_queryset(self, request, *args, **kwargs):
+            queryset = super().get_queryset(request, *args, **kwargs)
+            tenant = tenant_from_request(request)
+            queryset = queryset.filter(tenant=tenant)
+            return queryset
+
+        def save_model(self, request, obj, form, change):
+            tenant = tenant_from_request(request)
+            obj.tenant = tenant
+            super().save_model(request, obj, form, change)
+
