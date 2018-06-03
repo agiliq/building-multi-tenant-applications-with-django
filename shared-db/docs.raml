@@ -1,0 +1,176 @@
+#%RAML 1.0
+  ---
+    title: Django polls API
+    baseUri: http://api.example.com/{version}
+    version: v1
+    mediaType: application/json
+    types:
+        Poll:
+            type: object
+            properties:
+                question:
+                    required: true
+                    type: string
+                created_by:
+                    required: true
+                    type: User
+                pub_date:
+                    required: true
+                    type: date
+        Choice:
+            type: object
+            properties:
+                poll:
+                    required: true
+                    type: Poll
+                choice_text:
+                    required: true
+                    type: string
+        Vote:
+            type: object
+            properties:
+                choice:
+                    required: true
+                    type: Choice
+                poll:
+                    required: true
+                    type: Poll
+                voted_by:
+                    required: true
+                    type: User
+    /polls:
+        get:
+            description: Get list of polls
+            queryParameters:
+                pollId:
+                    description: Specify the poll id you want to retrieve
+                    type: integer
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "data":
+                            {
+                                "Id": 1,
+                                "question": "Will A be the leader next time?",
+                                "created_by": "user1",
+                                "pub_date": "08:02:2014"
+                            },
+                            "success": true,
+                            "status": 200
+                        }
+        post:
+            description: Post a poll
+            queryParameters:
+                question:
+                    description: Question you want to create for poll
+                    type: string
+                    required: true
+                created_by:
+                    description: Poll created by the user
+                    type: User
+                    required: true
+                pub_date:
+                    description: Poll created on
+                    type: date
+                    required: true
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "success": true,
+                            "status": 201
+                        }
+    /choices:
+        get:
+            description: Get list of choices
+            queryParameters:
+                choiceId:
+                    description: Specify the choice id you want to retrieve
+                    type: integer
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "data":
+                            {
+                                "Id": 1,
+                                "poll": "Will A be the leader next time?",
+                                "choice_text": "user1"
+                            },
+                            "success": true,
+                            "status": 200
+                        }
+        post:
+            description: Post a choice
+            queryParameters:
+                poll:
+                    description: Choice you want to create for poll
+                    type: string
+                    required: true
+                choice_text:
+                    description: Choice for the poll
+                    type: string
+                    required: true
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "success": true,
+                            "status": 201
+                        }
+    /votes:
+        get:
+            description: Get votes of polls
+            queryParameters:
+                pollId:
+                    description: Specify the vote id you want to retrieve
+                    type: integer
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "data":
+                            {
+                                "Id": 1,
+                                "poll": "Will A be the leader next time?",
+                                "choice": "user1",
+                                "voted_by": "user2"
+                            },
+                            "success": true,
+                            "status": 200
+                        }
+        post:
+            description: Post a vote
+            queryParameters:
+                choice:
+                    description: Choice for the poll
+                    type: Choice
+                    required: true
+                poll:
+                    description: Poll to be voted
+                    type: Poll
+                    required: true
+                voted_by:
+                    description: Poll voted by
+                    type: User
+                    required: true
+            responses:
+                200:
+                    body:
+                        application/json:
+                        example:
+                        {
+                            "success": true,
+                            "status": 201
+                        }
