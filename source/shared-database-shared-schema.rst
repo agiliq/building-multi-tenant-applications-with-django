@@ -62,6 +62,14 @@ Create a model for storing :code:`Tenant` data.
 
 And then create a class :code:`TenantAwareModel` class which other models with subclass from.
 
+.. code-block:: python
+    class TenantAwareModel(models.Model):
+        tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+
+        class Meta:
+            abstract = True
+
+
 Change the :code:`polls.models` to subclass from :code:`TenantAwareModel`.
 
 
