@@ -1,8 +1,8 @@
 Shared database with shared schema
 ---------------------------------------
 
-In this chapter, we will rebuild a sligthly modified Django polls app to be multi-tenant.
-You can download the `code from github <https://github.com/agiliq/building-multi-tenant-applications-with-django>`_.
+In this chapter, we will rebuild a slightly modified Django polls app to be multi-tenant.
+You can download the `code from Github <https://github.com/agiliq/building-multi-tenant-applications-with-django>`_.
 
 The base single-tenant app
 ++++++++++++++++++++++++++++
@@ -92,9 +92,9 @@ Change the :code:`polls.models` to subclass from :code:`TenantAwareModel`.
 Identifying tenants
 +++++++++++++++++++++++++++++++
 
-There are mamny approached to identify the tenants. One common method is to give each tenant their own subdomain. So if you main website is
+There are many approaches to identify the tenant. One common method is to give each tenant their own subdomain. So if you main website is
 
-www.example.com, each of these will be a different tenant.
+`www.example.com`, each of the following will be a different tenant.
 
 - thor.example.com
 - loki.example.com
@@ -108,7 +108,7 @@ We will :code:`polls.local` as the main domain and :code:`<xxx>.polls.local` as 
 Extracting tenant from request
 +++++++++++++++++++++++++++++++
 
-Django views always have a :code:`request` which has  :code:`Host` header. This will contain the full subdomain the tenant is using.
+Django views always have a :code:`request` which has the :code:`Host` header. This will contain the full subdomain the tenant is using.
 We will add some utility methods to do this. Create a :code:`utils.py` and add this code.
 
 .. code-block:: python
@@ -135,7 +135,7 @@ A detour to /etc/hosts
 
 To ensure that the :code:`<xxx>.polls.local` hits your development machine, make sure you add a few entries to your :code:`/etc/hosts`
 
-(If you are oj windows, use :code:`C:\Windows\System32\Drivers\etc\hosts`). My file looks like this.
+(If you are on windows, use :code:`C:\Windows\System32\Drivers\etc\hosts`). My file looks like this.
 
 .. code-block:: text
 
@@ -151,7 +151,7 @@ Using :code:`tenant_from_request` in the views
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Views, whether they are Django function based, class based or a Django Rest Framework view have access to the request.
-Lets take the example of :code:`polls.views.PollViewSet` to limit the endpoints to tenant specic :code:`Poll` objects.
+Lets take the example of :code:`polls.views.PollViewSet` to limit the endpoints to tenant specific :code:`Poll` objects.
 
 .. code-block:: python
 
@@ -172,7 +172,7 @@ Isolating the admin
 
 Like the views we need to enforce tenant isolation on the admin. We will need to override two methods.
 
-- :code:`get_queryset`: So that only the tenant's objects show up.
+- :code:`get_queryset`: So that only the current tenant's objects show up.
 - :code:`save_model`: So that tenant gets set on the object when the object is saved.
 
 With the changes, your :code:`admin.py` looks something like this.
@@ -195,3 +195,4 @@ With the changes, your :code:`admin.py` looks something like this.
             obj.tenant = tenant
             super().save_model(request, obj, form, change)
 
+With these changes, you have a basic multi-tenant app. But there is a lot more to do as we will see in the the following chapters.
