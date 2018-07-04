@@ -104,7 +104,7 @@ Tenant separation in views
 
 Lets add a few utility methods which will allow us to get and set the schema. Add the following functions to your :code:`utils.py`.
 
-.. code-block: python
+.. code-block:: python
 
 
     def hostname_from_request(request):
@@ -125,7 +125,7 @@ Lets add a few utility methods which will allow us to get and set the schema. Ad
 
 Now we can separate the tenants in the views using these functions.
 
-.. code-block: python
+.. code-block:: python
 
     # apiviews.py
     # ...
@@ -150,7 +150,7 @@ Now we can separate the tenants in the views using these functions.
     # ...
 
 
-.. code-block: python
+.. code-block:: python
 
     # admin.py
     # ...
@@ -189,7 +189,7 @@ We will set the schema in the middleware before any view code comes in play, so 
 
 Create a new middleware like this:
 
-.. code-block: python
+.. code-block:: python
 
     from tenants.utils import set_tenant_schema_for_request
 
@@ -204,7 +204,7 @@ Create a new middleware like this:
 
 And add it to your :code:`settings.MIDDLEWARES`
 
-.. code-block: python
+.. code-block:: python
 
     MIDDLEWARE = [
         # ...
@@ -220,7 +220,7 @@ We have one more change to make before we are done. You can not use `manage.py c
 
 Because the middlewares do no come in play when you run a command, you need another place to hook our :code:`set_tenant_schema_for_request`. To do this, create a new file :code:`tenant_context_manage.py`. This is similar to :code:`manage.py`, with a few minor changes.
 
-.. code-block: python
+.. code-block:: python
 
     #!/usr/bin/env python
     import os
