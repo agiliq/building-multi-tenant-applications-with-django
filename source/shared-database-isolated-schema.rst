@@ -91,7 +91,7 @@ Managing database migrations
                     super(Command, self).handle(*args, **options)
 
 
-To understand what we are doing here, you need to know a few postgres queries.
+To understand what we are doing here, you need to know a few Postgres queries.
 
 - :code:`CREATE SCHEMA IF NOT EXISTS potter` creates a new schema named potter.
 - :code:`SET search_path to potter` set the connection to use the given schema.
@@ -99,12 +99,161 @@ To understand what we are doing here, you need to know a few postgres queries.
 Now when you run :code:`manage.py migrate_schemas` it loops over the our tenants map, the creates a schema for that tenant, and runs the migration for the tenant.
 
 
+Tenant separation in views
+++++++++++++++++++++++++++++
+
+Lets add a few utility methods which will allow us to get and set the schema. Add the following functions to your :code:`utils.py`.
+
+.. code-block: python
+
+
+    def hostname_from_request(request):
+        # split on `:` to remove port
+        return request.get_host().split(':')[0].lower()
+
+
+    def tenant_schema_from_request(request):
+        hostname = hostname_from_request(request)
+        tenants_map = get_tenants_map()
+        return tenants_map.get(hostname)
+
+
+    def set_tenant_schema_for_request(request):
+        schema = tenant_schema_from_request(request)
+        with connection.cursor() as cursor:
+            cursor.execute(f"SET search_path to {schema}")
+
+Now we can separate the tenants in the views using these functions.
+
+.. code-block: python
+
+    # apiviews.py
+    # ...
+    from tenants.utils import set_tenant_schema_for_request
+
+
+    class PollViewSet(viewsets.ModelViewSet):
+        queryset = Poll.objects.all()
+        serializer_class = PollSerializer
+
+        def get_queryset(self):
+            set_tenant_schema_for_request(self.request)
+            return super().get_queryset().filter(tenant=tenant)
+
+        def destroy(self, request, *args, **kwargs):
+            set_tenant_schema_for_request(self.request)
+            poll = Poll.objects.get(pk=self.kwargs["pk"])
+            if not request.user == poll.created_by:
+                raise PermissionDenied("You can not delete this poll.")
+            return super().destroy(request, *args, **kwargs)
+
+    # ...
+
+
+.. code-block: python
+
+    # admin.py
+    # ...
+    from tenants.utils import tenant_schema_from_request
+
+    @admin.register(Poll)
+    class PollAdmin(admin.ModelAdmin):
+        fields = ["question", "created_by", "pub_date"]
+        readonly_fields = ["pub_date"]
+
+        def get_queryset(self, request, *args, **kwargs):
+            set_tenant_schema_for_request(self.request)
+            queryset = super().get_queryset(request, *args, **kwargs)
+            tenant = tenant_from_request(request)
+            queryset = queryset.filter(tenant=tenant)
+            return queryset
+
+        def save_model(self, request, obj, form, change):
+            set_tenant_schema_for_request(self.request)
+            tenant = tenant_from_request(request)
+            obj.tenant = tenant
+            super().save_model(request, obj, form, change)
+
+
+
 A middleware to set schemas
 ++++++++++++++++++++++++++++
 
+Our naive approach to separate the tenants suffers from a few problems:
 
+- :code:`set_tenant_schema_for_request(self.request)` is duplicated everywhere
+- Any third party code, including Django's, ORM accesses will fail because they will try to access the objects from the public schema, which is empty.
+
+Both of these can be fixed by using a middleware.
+We will set the schema in the middleware before any view code comes in play, so any ORM code will pull and write the data from the tenant's schema.
+
+Create a new middleware like this:
+
+.. code-block: python
+
+    from tenants.utils import set_tenant_schema_for_request
+
+    class TenantMiddleware:
+        def __init__(self, get_response):
+            self.get_response = get_response
+
+        def __call__(self, request):
+            set_tenant_schema_for_request(request)
+            response = self.get_response(request)
+            return response
+
+And add it to your :code:`settings.MIDDLEWARES`
+
+.. code-block: python
+
+    MIDDLEWARE = [
+        # ...
+        'tenants.middlewares.TenantMiddleware',
+    ]
 
 
 
 Beyond the request-response cycle
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+We have one more change to make before we are done. You can not use `manage.py createssuperuser` or any Django command, as manage.py will try to use the public schema, and there are bo tables in the public schema.
+
+Because the middlewares do no come in play when you run a command, you need another place to hook our :code:`set_tenant_schema_for_request`. To do this, create a new file :code:`tenant_context_manage.py`. This is similar to :code:`manage.py`, with a few minor changes.
+
+.. code-block: python
+
+    #!/usr/bin/env python
+    import os
+    import sys
+
+
+    if __name__ == "__main__":
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pollsapi.settings")
+        try:
+            from django.core.management import execute_from_command_line
+        except ImportError as exc:
+            raise ImportError(
+                "Couldn't import Django. Are you sure it's installed and "
+                "available on your PYTHONPATH environment variable? Did you "
+                "forget to activate a virtual environment?"
+            ) from exc
+        from django.db import connection
+        args = sys.argv
+        schema = args[1]
+        with connection.cursor() as cursor:
+
+            cursor.execute(f"SET search_path to {schema}")
+
+            del args[1]
+            execute_from_command_line(args)
+
+This allows setting the tenant schema, which is passed as first argument before running the command.
+
+
+We will be able to use it like this. :code:`python tenant_context_manage.py thor createsuperuser`.
+
+With this, you can login to any tenant's admin, create some objects, and view the API endpoints. Here is what the polls api endpoint looks like for me.
+
+.. image:: polls-isolated-schema.png
+
+In the next chapter we will look at separating the tenants to their own databases.
