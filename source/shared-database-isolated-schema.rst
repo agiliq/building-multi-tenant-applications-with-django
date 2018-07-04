@@ -45,6 +45,11 @@ In this chapter, we will rearchitect our code to use Shared database with isolat
 What are database schemas?
 +++++++++++++++++++++++++++
 
+Schemas in database are a way to group objects. Postgres documentation defines schema as
+
+    A database contains one or more named schemas, which in turn contain tables. Schemas also contain other kinds of named objects, including data types, functions, and operators. The same object name can be used in different schemas without conflict; for example, both schema1 and myschema may contain tables named mytable.
+
+For the rest of the chapter, we will be using Postgres.
 
 A middleware to set schemas
 ++++++++++++++++++++++++++++
