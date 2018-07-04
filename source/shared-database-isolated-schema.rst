@@ -91,6 +91,14 @@ Managing database migrations
                     super(Command, self).handle(*args, **options)
 
 
+To understand what we are doing here, you need to know a few postgres queries.
+
+- :code:`CREATE SCHEMA IF NOT EXISTS potter` creates a new schema named potter.
+- :code:`SET search_path to potter` set the connection to use the given schema.
+
+Now when you run :code:`manage.py migrate_schemas` it loops over the our tenants map, the creates a schema for that tenant, and runs the migration for the tenant.
+
+
 A middleware to set schemas
 ++++++++++++++++++++++++++++
 

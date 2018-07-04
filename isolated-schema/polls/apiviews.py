@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 
 from .models import Poll, Choice
 from .serializers import PollSerializer, ChoiceSerializer, VoteSerializer, UserSerializer
-from tenants.utils import tenant_from_request
+from tenants.utils import set_tenant_schema_for_request
 
 
 class PollViewSet(viewsets.ModelViewSet):
@@ -17,10 +17,11 @@ class PollViewSet(viewsets.ModelViewSet):
     serializer_class = PollSerializer
 
     def get_queryset(self):
-        tenant = tenant_from_request(self.request)
+        set_tenant_schema_for_request(self.request)
         return super().get_queryset().filter(tenant=tenant)
 
     def destroy(self, request, *args, **kwargs):
+        set_tenant_schema_for_request(self.request)
         poll = Poll.objects.get(pk=self.kwargs["pk"])
         if not request.user == poll.created_by:
             raise PermissionDenied("You can not delete this poll.")

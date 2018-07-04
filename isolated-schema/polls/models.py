@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from tenants.models import TenantAwareModel
 
 
-class Poll(TenantAwareModel):
+class Poll(models.Model):
     question = models.CharField(max_length=100)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now=True)
@@ -13,7 +12,7 @@ class Poll(TenantAwareModel):
         return self.question
 
 
-class Choice(TenantAwareModel):
+class Choice(models.Model):
     poll = models.ForeignKey(Poll, related_name='choices',on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=100)
 
@@ -21,7 +20,7 @@ class Choice(TenantAwareModel):
         return self.choice_text
 
 
-class Vote(TenantAwareModel):
+class Vote(models.Model):
     choice = models.ForeignKey(Choice, related_name='votes', on_delete=models.CASCADE)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     voted_by = models.ForeignKey(User, on_delete=models.CASCADE)
