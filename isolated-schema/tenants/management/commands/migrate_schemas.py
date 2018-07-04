@@ -4,7 +4,6 @@ from django.db import connection
 from ...utils import get_tenants_map
 
 
-
 class Command(MigrationCommand):
     def handle(self, *args, **options):
         with connection.cursor() as cursor:
@@ -13,5 +12,3 @@ class Command(MigrationCommand):
                 cursor.execute(f"CREATE SCHEMA IF NOT EXISTS {schema}")
                 cursor.execute(f"SET search_path to {schema}")
                 super(Command, self).handle(*args, **options)
-
-
