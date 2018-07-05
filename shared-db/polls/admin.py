@@ -4,6 +4,7 @@ from .models import Poll, Choice
 
 from tenants.utils import tenant_from_request
 
+
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
     fields = ["question", "created_by", "pub_date"]

@@ -3,7 +3,7 @@ from django.db import connection
 
 def hostname_from_request(request):
     # split on `:` to remove port
-    return request.get_host().split(':')[0].lower()
+    return request.get_host().split(":")[0].lower()
 
 
 def tenant_schema_from_request(request):
@@ -19,7 +19,4 @@ def set_tenant_schema_for_request(request):
 
 
 def get_tenants_map():
-    return {
-        "thor.polls.local": "thor",
-        "poter.polls.local": "potter",
-    }
+    return {"thor.polls.local": "thor", "poter.polls.local": "potter"}

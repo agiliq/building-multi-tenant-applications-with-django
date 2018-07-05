@@ -1,5 +1,6 @@
 from tenants.utils import set_tenant_schema_for_request
 
+
 class TenantMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

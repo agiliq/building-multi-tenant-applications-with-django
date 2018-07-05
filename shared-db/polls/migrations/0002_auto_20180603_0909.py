@@ -6,28 +6,37 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('tenants', '0001_initial'),
-        ('polls', '0001_initial'),
-    ]
+    dependencies = [("tenants", "0001_initial"), ("polls", "0001_initial")]
 
     operations = [
         migrations.AddField(
-            model_name='choice',
-            name='tenant',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='tenants.Tenant'),
+            model_name="choice",
+            name="tenant",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tenants.Tenant",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='poll',
-            name='tenant',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='tenants.Tenant'),
+            model_name="poll",
+            name="tenant",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tenants.Tenant",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='vote',
-            name='tenant',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='tenants.Tenant'),
+            model_name="vote",
+            name="tenant",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tenants.Tenant",
+            ),
             preserve_default=False,
         ),
     ]

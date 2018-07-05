@@ -14,6 +14,7 @@ if __name__ == "__main__":
             "forget to activate a virtual environment?"
         ) from exc
     from django.db import connection
+
     args = sys.argv
     schema = args[1]
     with connection.cursor() as cursor:
