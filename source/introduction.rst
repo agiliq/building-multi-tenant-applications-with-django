@@ -25,7 +25,7 @@ The various approached to multi tenancy
 
 - Shared database with shared schema
 - Shared database with isolated schema
-- Isolated databased with a shared app server
+- Isolated database with a shared app server
 - Completely isolated tenants using Docker
 
 Shared database with shared schema
@@ -39,7 +39,7 @@ Shared database with isolated schema
 A single database keeps every tenant's data. Each tenant's data is in a separate schema within the single database. The schema identifies the tenant and data tabled do no have a FK to the tenant.
 
 
-Isolated databased with a shared app server
+Isolated database with a shared app server
 ----------------------------------------------
 
 Every tenant's data is in a separate database. The database identifies the tenant.
