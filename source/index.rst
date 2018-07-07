@@ -15,8 +15,8 @@ Building Multi Tenant Applications with Django
    shared-database-isolated-schema
    isolated-database
    isolated-dockers
-   third-party-apps
    tying-it-all-together
+   third-party-apps
 
 
 

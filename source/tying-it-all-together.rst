@@ -2,12 +2,12 @@ Tying it all together
 ------------------------
 
 
-A comparision of trade-offs of various methods
+A comparison of trade-offs of various methods
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 =======================     ==========   ==================  ====================================
 Method                      Isolation    Time to             Django DB
-                                         launch new tenants  Compatiblity
+                                         launch new tenants  Compatibility
 =======================     ==========   ==================  ====================================
 Shared DB and Schema        Low          Low                 High (Supported in all DBs)
 Isolated Schema             Medium       Low                 Medium (DB must support schema)
