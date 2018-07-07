@@ -5,7 +5,7 @@ Limitations of shared schema and our current method
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In the previous chapter we used a :code:`ForeignKey` to separate the tenants. This method is simple
-but limited due to the following limitations.
+but limited due to the following:
 
 - Weak separation of tenant's data
 - Tenant isolation code is intermixed with app code
@@ -21,7 +21,7 @@ Because each tenant's data stays in the same schema, there is no way to limit ac
 Tenant isolation code is intermixed with app code
 ==================================================
 
-You need to litter your code with :code:`.filter(tenant=tenant)` every time you access db. For example in your :code:`ViewSet` you would be doing this:
+You need to litter your code with :code:`.filter(tenant=tenant)` every time you access the database. For example in your :code:`ViewSet` you would be doing this:
 
 .. code-block:: python
 

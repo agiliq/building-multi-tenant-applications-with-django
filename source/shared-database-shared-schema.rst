@@ -103,7 +103,7 @@ There are many approaches to identify the tenant. One common method is to give e
 
 We will use the same method in the rest of the book. Our :code:`Tenant` model has :code:`subdomain_prefix` which will identify the tenant.
 
-We will :code:`polls.local` as the main domain and :code:`<xxx>.polls.local` as tenant subdomain.
+We will use :code:`polls.local` as the main domain and :code:`<xxx>.polls.local` as tenant subdomain.
 
 
 Extracting tenant from request
@@ -196,4 +196,4 @@ With the changes, your :code:`admin.py` looks something like this.
             obj.tenant = tenant
             super().save_model(request, obj, form, change)
 
-With these changes, you have a basic multi-tenant app. But there is a lot more to do as we will see in the the following chapters.
+With these changes, you have a basic multi-tenant app. But there is a lot more to do as we will see in the following chapters.
