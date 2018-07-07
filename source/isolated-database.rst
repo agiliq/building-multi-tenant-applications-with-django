@@ -1,8 +1,8 @@
-Isolated databased with a shared app server
+Isolated database with a shared app server
 ----------------------------------------------
 
 In the previous chapter we used schemas to separate each tenant's data. In this chapter we will keep each tenant's data in a separate DB.
-For this chapter we will use sqlite, though any DB supported by Django will suffice. Our core architecture will be quite similar to previous chapter, where we
+For this chapter we will use sqlite, though any DB supported by Django will suffice. Our core architecture will be quite similar to the previous chapter, where we
 
 - Used request header to find the tenant
 - Created a mapping of tenants to schemas
@@ -72,10 +72,10 @@ We are going to use a threadlocal variable to do this.
 What are threadlocal variables?
 =================================
 
-Threadlocal variables which you need to be accessible during the whole life-cycle of the thread, but you don't want to be accessible or to lake between threads.
+Threadlocal variables which you need to be accessible during the whole life-cycle of the thread, but you don't want it to be accessible or to leak between threads.
 threadlocal variables are discouraged in Django but they are a clean way for us to pass the data down the stack to the routers.
 
-You create a threadlocal variable at the top of the module liek this :code:`_threadlocal = threading.local()`.
+You create a threadlocal variable at the top of the module like this :code:`_threadlocal = threading.local()`.
 
 If you are using Python 3.7, you can also use contextvars instead of threadlocal variables.
 
