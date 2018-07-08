@@ -184,4 +184,4 @@ With this we can add some :code:`Poll` objects from the admin, and look at the A
 
 .. image:: isolated-db.png
 
-In the next chapter, we will look at separating the tenants in their own docker containers.
+In the next chapter, we will look at separating the tenants in their own docker containers. The code for this chapter is available at https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/isolated-db
