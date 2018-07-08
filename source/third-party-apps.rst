@@ -32,3 +32,84 @@ We will start from our non tenant aware Polls app and add multi tenancy using dj
 Create a new database, and make sure your Django app picks up the new DB by updating the :code:`DATABASE_URL` environment var.
 
 Update your settings to use the tenant-schemas :code:`DATABASE_BACKEND` and tenant-schemas :code:`DATABASE_ROUTERS`
+
+
+.. code-block:: python
+
+    DATABASES["default"]["ENGINE"] = "tenant_schemas.postgresql_backend"
+    # ...
+    DATABASE_ROUTERS = ("tenant_schemas.routers.TenantSyncRouter",)
+
+The :code:`postgresql_backend` will ensure that the connection has the correct :code:`tenant` set, and the :code:`TenantSyncRouter`
+will ensure that the migrations run correctly.
+
+Then create a new app called :code:`tenants` with :code:`manage.py startapp`, and create a new :code:`Client` model
+
+.. code-block:: python
+
+    from tenant_schemas.models import TenantMixin
+
+
+    class Client(TenantMixin):
+        name = models.CharField(max_length=100)
+
+In your settings, change the middleware and set the :code:`TENANT_MODEL`.
+
+.. code-block:: python
+
+    TENANT_MODEL = "tenants.Client"
+    # ...
+
+    MIDDLEWARE = [
+        "tenant_schemas.middleware.TenantMiddleware",
+        # ...
+        ]
+
+:code:`tenant-schemas` comes with the concept of :code:`SHARED_APPS` and :code:`TENANT_APPS`.
+The apps in :code:`SHARED_APPS` have their tables in public schema, while the apps in :code:`TENANT_APPS` have their tables in tenant specific schemas.
+
+
+.. code-block:: python
+
+    SHARED_APPS = ["tenant_schemas", "tenants"]
+
+    TENANT_APPS = [
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+        "rest_framework",
+        "rest_framework.authtoken",
+        "polls",
+    ]
+
+INSTALLED_APPS = SHARED_APPS + TENANT_APPS
+
+We are almost done. We need to
+
+- Run the migrations in the public schema
+- Create the tenants and run migrations in all the tenant schemas
+- Create a superuser in tenant schemas
+
+:code:`tenant-schemas` has the :code:`migrate_schemas` which replaces the :code:`migrate` command.
+It is tenant aware and will sync :code:`SHARED_APPS` to public schema, and :code:`TENANT_APPS` to tenant specific schemas.
+
+Run :code:`python manage.py migrate_schemas --shared` to sync the public tables.
+
+The run a python shell using :code:`python manage.py shell`, and create the two tenants, using
+
+.. code-block:: python
+
+    Client.objects.create(name="thor",
+        schema_name="thor", domain_url="thor.polls.local")
+    Client.objects.create(name="potter",
+        schema_name="potter", domain_url="potter.polls.local")
+
+
+This will create the schemas in the table and run the migrations. You now need to create the superuser in the tenant schema so that you can access the admin.
+The :code:`tenant_command` command allow running any Django command in the context of any tenant.
+
+.. code-block:: python
+

@@ -27,10 +27,7 @@ REST_FRAMEWORK = {
 
 TENANT_MODEL = "tenants.Client"
 
-SHARED_APPS = [
-    "tenant_schemas",
-    "tenants"
-]
+SHARED_APPS = ["tenant_schemas", "tenants"]
 
 TENANT_APPS = [
     "django.contrib.admin",
@@ -82,10 +79,8 @@ WSGI_APPLICATION = "pollsapi.wsgi.application"
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {"default": dj_database_url.config()}
-DATABASES['default']['ENGINE'] = 'tenant_schemas.postgresql_backend'
-DATABASE_ROUTERS = (
-    'tenant_schemas.routers.TenantSyncRouter',
-)
+DATABASES["default"]["ENGINE"] = "tenant_schemas.postgresql_backend"
+DATABASE_ROUTERS = ("tenant_schemas.routers.TenantSyncRouter",)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
