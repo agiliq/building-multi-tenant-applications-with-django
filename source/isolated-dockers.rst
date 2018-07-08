@@ -255,3 +255,5 @@ Do this `docker exec -it <containet_name> bash`. (You can get the container name
 You can now access the thor tenant as :code:`thor.polls.local:8080` and potter at :code:`potter.polls.local:8080`. After adding a :code:`Poll`, my tenant looks like this.
 
 .. image:: polls-isolated-docker.png
+
+The code for this chapter is available at https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/isolated-docker
