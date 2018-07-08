@@ -197,3 +197,5 @@ With the changes, your :code:`admin.py` looks something like this.
             super().save_model(request, obj, form, change)
 
 With these changes, you have a basic multi-tenant app. But there is a lot more to do as we will see in the following chapters.
+
+The code for this chapter is available at https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/shared-db
