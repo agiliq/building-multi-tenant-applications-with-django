@@ -6,9 +6,12 @@
 Building Multi Tenant Applications with Django
 ==========================================================================
 
+.. image:: book-cover-multi-tenant.jpg
+
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Table of Contents:
 
    introduction
    shared-database-shared-schema
