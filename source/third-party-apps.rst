@@ -117,4 +117,4 @@ The :code:`tenant_command` command allow running any Django command in the conte
     
  And we are done. We can now access the tenant admins, create polls and view the tenant specific API endpoints.
  
-
+The code for this chapter is available at https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/tenant-schemas-demo .
