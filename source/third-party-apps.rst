@@ -111,5 +111,10 @@ The run a python shell using :code:`python manage.py shell`, and create the two 
 This will create the schemas in the table and run the migrations. You now need to create the superuser in the tenant schema so that you can access the admin.
 The :code:`tenant_command` command allow running any Django command in the context of any tenant.
 
-.. code-block:: python
+.. code-block:: bash
+
+    python manage.py tenant_command createsuperuser
+    
+ And we are done. We can now access the tenant admins, create polls and view the tenant specific API endpoints.
+ 
 
