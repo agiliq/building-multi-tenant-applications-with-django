@@ -257,3 +257,5 @@ With this, you can login to any tenant's admin, create some objects, and view th
 .. image:: polls-isolated-schema.png
 
 In the next chapter we will look at separating the tenants to their own databases.
+
+The code for this chapter is available at https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/isolated-schema
