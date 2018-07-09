@@ -33,13 +33,14 @@ Django has descent support for a multi DB apps. You can specify multiple databas
 
 Then, if you want to read :code:`Polls` from the :code:`thor` db, you can use :code:`Poll.objects.using('thor').all()`.
 
-This sort of works, but if had to use :code:`using` everywhere, the code duplication would quickly make our code unmanageable.
-We need a central place to define which tenant the data should go to. Enter Django database routers.
+This sort of works. But if we had to use :code:`using` everywhere, the code duplication would quickly make our code unmanageable.
+We need a central place to define which database the tenant's DB requests should go to. Enter Django database routers.
 
 Database routing in Django
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Django allows hooking into the database routing process using the :code:`DATABASE_ROUTERS` settings.
+
 :code:`DATABASE_ROUTERS` take a list of classes which must implement a few methods. A router class looks like this.
 
 .. code:: python
@@ -59,20 +60,20 @@ Django allows hooking into the database routing process using the :code:`DATABAS
             return None
 
 
-However, none of the methods in a Router class take request as an argument. So we will need a way to pass the tenant data to the router.
+However, none of the methods in a Router class take request as an argument, which means there is no way for a router to call :code:`tenant_db_from_request`. So we will need a way to pass the tenant data to the router.
 
 
 Per tenant database routing using middlewares
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-We will use a middleware to calculate the DB to use. However, we will need some way to pass it to the router.
+We will use a middleware to calculate the DB to use. We will also need some way to pass it to the router.
 We are going to use a threadlocal variable to do this.
 
 
 What are threadlocal variables?
 =================================
 
-Threadlocal variables which you need to be accessible during the whole life-cycle of the thread, but you don't want it to be accessible or to leak between threads.
+Threadlocal variables are variables which you need to be accessible during the whole life-cycle of the thread, but you don't want it to be accessible or to leak between threads.
 threadlocal variables are discouraged in Django but they are a clean way for us to pass the data down the stack to the routers.
 
 You create a threadlocal variable at the top of the module like this :code:`_threadlocal = threading.local()`.
@@ -87,7 +88,6 @@ With this discussion, our middleware class looks like this:
 .. code-block:: python
 
     import threading
-    from uuid import uuid4
 
     from django.db import connections
     from .utils import tenant_db_from_request
