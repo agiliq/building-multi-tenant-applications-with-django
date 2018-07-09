@@ -15,9 +15,9 @@ Most modern Software as a Service applications are multi tenant. Whether it is S
 The structure of this book
 ++++++++++++++++++++++++++++
 
-In this book we will take a single tenant application and re-architect it to be a multi tenant application. We will use the Django polls app as our base.
+In this book we will take a single tenant application and re-architect it to be a multi tenant application. We will use a slightly modified Django polls app as our base.
 
-There are multiple approached for multi tenancy. We will look at the four most common ones.
+There are multiple approaches for multi tenancy. We will look at the four most common ones.
 
 
 The various approached to multi tenancy
@@ -49,3 +49,5 @@ Completely isolated tenants using Docker
 ------------------------------------------
 
 A new set of docker containers are launched for each tenant. Every tenant's data is in a separate database (which may or may not be running in container). A set of containers identifies the tenant.
+
+In the next four chapters, we will look at each architecture in turn. Let's get started.
