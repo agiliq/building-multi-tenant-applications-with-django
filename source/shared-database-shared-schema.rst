@@ -2,7 +2,7 @@ Shared database with shared schema
 ---------------------------------------
 
 In this chapter, we will rebuild a slightly modified Django polls app to be multi-tenant.
-You can download the `code from Github <https://github.com/agiliq/building-multi-tenant-applications-with-django>`_.
+You can download the `code from Github <https://github.com/agiliq/building-multi-tenant-applications-with-django/tree/master/base>`_.
 
 The base single-tenant app
 ++++++++++++++++++++++++++++
@@ -95,7 +95,9 @@ Identifying tenants
 
 There are many approaches to identify the tenant. One common method is to give each tenant their own subdomain. So if you main website is
 
-`www.example.com`, each of the following will be a different tenant.
+:code:`www.example.com`
+
+And each of the following will be a separate tenant.
 
 - thor.example.com
 - loki.example.com
