@@ -96,7 +96,7 @@ To understand what we are doing here, you need to know a few Postgres queries.
 - :code:`CREATE SCHEMA IF NOT EXISTS potter` creates a new schema named potter.
 - :code:`SET search_path to potter` set the connection to use the given schema.
 
-Now when you run :code:`manage.py migrate_schemas` it loops over the our tenants map, the creates a schema for that tenant, and runs the migration for the tenant.
+Now when you run :code:`manage.py migrate_schemas` it loops over the our tenants map, then creates a schema for that tenant and runs the migration for the tenant.
 
 
 Tenant separation in views
@@ -216,9 +216,11 @@ And add it to your :code:`settings.MIDDLEWARES`
 Beyond the request-response cycle
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-We have one more change to make before we are done. You can not use `manage.py createssuperuser` or any Django command, as manage.py will try to use the public schema, and there are bo tables in the public schema.
+We have one more change to make before we are done. You can not use `manage.py createssuperuser` or any Django command, as manage.py will try to use the public schema, and there are no tables in the public schema.
 
-Because the middlewares do no come in play when you run a command, you need another place to hook our :code:`set_tenant_schema_for_request`. To do this, create a new file :code:`tenant_context_manage.py`. This is similar to :code:`manage.py`, with a few minor changes.
+Middleware is only used in the request-response cycle and does not come into play when you run a command.
+Therefore we need another place to hook our :code:`set_tenant_schema_for_request`.
+To do this, create a new file :code:`tenant_context_manage.py`. This is similar to :code:`manage.py`, with a few minor changes.
 
 .. code-block:: python
 
