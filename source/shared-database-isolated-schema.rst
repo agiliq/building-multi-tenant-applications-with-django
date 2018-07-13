@@ -70,7 +70,7 @@ Now when we get a request to :code:`thor.polls.local` we need to read from the s
 Managing database migrations
 ++++++++++++++++++++++++++++
 
-:code:`manage.py migrate` is not schema aware. So we will need to subclass this command so that tables are created in all the schemas. Create the folder structure for a new command following the usual django convention. Then add a file named :code:`migrate_schemas` in there.
+:code:`manage.py migrate` is not schema aware. So we will need to subclass this command so that tables are created in all the schemas. Create the folder structure for a new command following the usual `django convention <https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/>`_. Then add a file named :code:`migrate_schemas` in there.
 
 
 .. code-block:: python
