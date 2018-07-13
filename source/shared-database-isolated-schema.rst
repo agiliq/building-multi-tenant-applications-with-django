@@ -138,6 +138,7 @@ Now we can separate the tenants in the views using these functions.
 
         def get_queryset(self):
             set_tenant_schema_for_request(self.request)
+            tenant = tenant_from_request(self.request)
             return super().get_queryset().filter(tenant=tenant)
 
         def destroy(self, request, *args, **kwargs):
