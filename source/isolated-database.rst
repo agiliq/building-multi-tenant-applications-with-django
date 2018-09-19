@@ -116,13 +116,15 @@ With this discussion, our middleware class looks like this:
 
 We have also added a few utility methods.
 
-Now use these in your :code:`settings.py`.
+
+Now use these in your :code:`settings.py`. Remember to locate at first because need to set the database on thread-local
 
 .. code-block:: python
 
     MIDDLEWARE = [
-        # ...
         "tenants.middlewares.TenantMiddleware",
+        # ...
+      
     ]
     DATABASE_ROUTERS = ["tenants.router.TenantRouter"]
 
