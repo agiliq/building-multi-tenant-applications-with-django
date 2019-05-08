@@ -127,7 +127,7 @@ We will add some utility methods to do this. Create a :code:`utils.py` and add t
     def tenant_from_request(request):
         hostname = hostname_from_request(request)
         subdomain_prefix = hostname.split('.')[0]
-        return Tenant.objects.filter(subdomain_prefix=subdomain_prefix).first()
+        return Tenant.objects.get(subdomain_prefix=subdomain_prefix)
 
 
 Now wherever you have a :code:`request`, you can use :code:`tenant_from_request` to get the tenant.
