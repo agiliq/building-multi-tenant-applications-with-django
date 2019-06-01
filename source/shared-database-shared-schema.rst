@@ -60,7 +60,7 @@ Create a model for storing :code:`Tenant` data.
         name = models.CharField(max_length=100)
         subdomain_prefix = models.CharField(max_length=100, unique=True)
 
-And then create a class :code:`TenantAwareModel` class which other models with subclass from.
+And then create a class :code:`TenantAwareModel` class which other models will subclass from.
 
 .. code-block:: python
 
