@@ -154,7 +154,7 @@ Using :code:`tenant_from_request` in the views
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Views, whether they are Django function based, class based or a Django Rest Framework view have access to the request.
-Lets take the example of :code:`polls.views.PollViewSet` to limit the endpoints to tenant specific :code:`Poll` objects.
+Lets take the example of :code:`polls.apiviews.PollViewSet` to limit the endpoints to tenant specific :code:`Poll` objects.
 
 .. code-block:: python
 
