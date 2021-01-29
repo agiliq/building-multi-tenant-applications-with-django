@@ -20,7 +20,7 @@ In this book we will take a single tenant application and re-architect it to be 
 There are multiple approaches for multi tenancy. We will look at the four most common ones.
 
 
-The various approached to multi tenancy
+The various approaches to multi tenancy
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 - Shared database with shared schema
@@ -36,7 +36,7 @@ A single database keeps every tenant's data. A :code:`ForeignKey` in the tables 
 Shared database with isolated schema
 ---------------------------------------
 
-A single database keeps every tenant's data. Each tenant's data is in a separate schema within the single database. The schema identifies the tenant and data tabled do no have a FK to the tenant.
+A single database keeps every tenant's data. Each tenant's data is in a separate schema within the single database. The schema identifies the tenant and data tables do no have a FK to the tenant.
 
 
 Isolated database with a shared app server
