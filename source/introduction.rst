@@ -36,7 +36,7 @@ A single database keeps every tenant's data. A :code:`ForeignKey` in the tables 
 Shared database with isolated schema
 ---------------------------------------
 
-A single database keeps every tenant's data. Each tenant's data is in a separate schema within the single database. The schema identifies the tenant and data tabled do no have a FK to the tenant.
+A single database keeps every tenant's data. Each tenant's data is in a separate schema within the single database. The schema identifies the tenant and data tabled do not have a FK to the tenant.
 
 
 Isolated database with a shared app server
