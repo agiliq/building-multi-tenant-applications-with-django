@@ -21,7 +21,7 @@ Because each tenant's data stays in the same schema, there is no way to limit ac
 Tenant isolation code is intermixed with app code
 ==================================================
 
-You need to litter your code with :code:`.filter(tenant=tenant)` every time you access the database. For example in your :code:`ViewSet` you would be doing this:
+You need to filter your code with :code:`.filter(tenant=tenant)` every time you access the database. For example in your :code:`ViewSet` you would be doing this:
 
 .. code-block:: python
 
