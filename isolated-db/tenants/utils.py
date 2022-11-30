@@ -13,4 +13,4 @@ def tenant_db_from_request(request):
 
 
 def get_tenants_map():
-    return {"thor.polls.local": "thor", "poter.polls.local": "potter"}
+    return {"thor.polls.local": "thor", "potter.polls.local": "potter"}
